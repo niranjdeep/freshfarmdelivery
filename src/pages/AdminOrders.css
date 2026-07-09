@@ -1,0 +1,55 @@
+.admin-container {
+
+    padding: 30px;
+
+}
+
+
+.status-summary {
+
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+
+}
+
+
+.status-summary div {
+
+    background: #e8f5e9;
+    padding: 20px;
+    border-radius: 12px;
+    width: 200px;
+    text-align: center;
+
+}
+
+
+.order-card {
+
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px #ddd;
+
+}
+
+
+select {
+
+    padding: 8px;
+    border-radius: 8px;
+
+}
+
+
+@media(max-width:768px) {
+
+    .status-summary {
+
+        flex-direction: column;
+
+    }
+
+}
