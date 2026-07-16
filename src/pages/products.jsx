@@ -53,14 +53,22 @@ function Products() {
 
                 ) : (
 
-                    products.map((product) => (
-
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                        />
-
-                    ))
+                    <div
+    style={{
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        gap: "20px",
+        padding: "20px"
+    }}
+>
+    {products.map((product) => (
+        <ProductCard
+            key={product.id}
+            product={product}
+        />
+    ))}
+</div>
 
                 )
             }

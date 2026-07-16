@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DECIMAL, DateTime
+from sqlalchemy import Column, Integer, String, Text, DECIMAL, DateTime, Boolean
 from sqlalchemy.sql import func
 
 from app.db.database import Base
@@ -17,4 +17,5 @@ class Product(Base):
     stock = Column(Integer, default=0)
     image_url = Column(String(255))
     status = Column(String(30), default="Available")
+    is_featured = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

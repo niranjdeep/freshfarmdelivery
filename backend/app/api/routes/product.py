@@ -9,6 +9,10 @@ from app.services.product_service import (
     get_product_by_id,
     update_product,
     delete_product,
+    get_products_by_category,
+    get_featured_products,
+    get_popular_products,
+    get_related_products,
 )
 
 router = APIRouter(
@@ -37,6 +41,29 @@ def get_products(
     db: Session = Depends(get_db)
 ):
     return get_all_products(db)
+# Get Products By Category
+@router.get("/category/{category_name}")
+def products_by_category(
+    category_name: str,
+    db: Session = Depends(get_db)
+):
+    return get_products_by_category(db, category_name)
+
+
+# Get Featured Products
+@router.get("/featured")
+def featured_products(
+    db: Session = Depends(get_db)
+):
+    return get_featured_products(db)
+
+
+# Get Popular Products
+@router.get("/popular")
+def popular_products(
+    db: Session = Depends(get_db)
+):
+    return get_popular_products(db)
 
 
 # Get Product By ID
@@ -78,7 +105,13 @@ def edit_product(
     return {
         "message": "Product Updated Successfully"
     }
-
+# Get Related Products
+@router.get("/{product_id}/related")
+def related_products(
+    product_id: str,
+    db: Session = Depends(get_db)
+):
+    return get_related_products(db, product_id)
 
 # Delete Product
 @router.delete("/{product_id}")

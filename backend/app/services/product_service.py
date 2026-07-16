@@ -7,6 +7,36 @@ from app.schemas.product_schema import ProductCreate
 def generate_product_id(db: Session):
     count = db.query(Product).count() + 1
     return f"PRD{count:03d}"
+def get_products_by_category(db: Session, category_name: str):
+    return (
+        db.query(Product)
+        .filter(
+            Product.category == category_name,
+            Product.status == "Available"
+        )
+        .all()
+    )
+
+
+def get_featured_products(db: Session):
+    return (
+        db.query(Product)
+        .filter(
+            Product.is_featured == True,
+            Product.status == "Available"
+        )
+        .all()
+    )
+
+
+def get_popular_products(db: Session):
+    return (
+        db.query(Product)
+        .filter(Product.status == "Available")
+        .order_by(Product.stock.desc())
+        .limit(10)
+        .all()
+    )
 
 
 def add_product(db: Session, product: ProductCreate):
@@ -90,3 +120,24 @@ def delete_product(db: Session, product_id: str):
     db.commit()
 
     return product
+def get_related_products(db: Session, product_id: str):
+
+    product = (
+        db.query(Product)
+        .filter(Product.product_id == product_id)
+        .first()
+    )
+
+    if not product:
+        return []
+
+    return (
+        db.query(Product)
+        .filter(
+            Product.category == product.category,
+            Product.product_id != product_id,
+            Product.status == "Available"
+        )
+        .limit(4)
+        .all()
+    )

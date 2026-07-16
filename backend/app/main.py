@@ -20,12 +20,16 @@ from app.models.admin import Admin
 from app.models.admin import Admin
 from app.api.routes.admin import router as admin_router
 from app.api.routes.admin_dashboard import router as admin_dashboard_router
+
+from app.api.routes.category import router as category_router
+from fastapi.staticfiles import StaticFiles
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Fresh Farm Delivery API",
     version="1.0.0"
 )
+app.mount("/static", StaticFiles(directory="static"), name="static")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -42,6 +46,7 @@ app.include_router(order_router)
 app.include_router(delivery_router)
 app.include_router(admin_router)
 app.include_router(admin_dashboard_router)
+app.include_router(category_router)
 print(app.routes)
 
 @app.get("/")

@@ -156,7 +156,7 @@ function AdminOrders() {
                     {
                         orders.filter(
                             order =>
-                            order.status === "Pending"
+                            order.order_status === "Pending"
                         ).length
                     }
 
@@ -177,7 +177,7 @@ function AdminOrders() {
                     {
                         orders.filter(
                             order =>
-                            order.status === "Completed"
+                            order.order_status === "Completed"
                         ).length
                     }
 

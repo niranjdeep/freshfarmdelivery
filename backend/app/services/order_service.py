@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.order import Order
 from app.models.order_item import OrderItem
 from app.schemas.order_schema import OrderCreate
+from app.models.cart import CartItem
 
 
 
@@ -94,10 +95,23 @@ def create_order(
 
 
 
+        db.commit()
+
+    # Clear Customer Cart
+    (
+        db.query(CartItem)
+        .filter(
+            CartItem.customer_id == order_data.customer_id
+        )
+        .delete()
+    )
+
     db.commit()
 
-
     return new_order
+
+
+    
 
 
 

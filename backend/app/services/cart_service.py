@@ -11,32 +11,48 @@ def add_to_cart(
     cart: CartCreate
 ):
 
+    # Check if product already exists in cart
+    existing_cart = (
+        db.query(CartItem)
+        .filter(
+            CartItem.customer_id == cart.customer_id,
+            CartItem.product_id == cart.product_id
+        )
+        .first()
+    )
+
+    # If exists, increase quantity
+    if existing_cart:
+
+        existing_cart.quantity += cart.quantity
+
+        existing_cart.total_price = (
+            existing_cart.quantity * existing_cart.price
+        )
+
+        db.commit()
+        db.refresh(existing_cart)
+
+        return existing_cart
+
+    # Otherwise create new cart item
     total_price = cart.quantity * cart.price
 
     new_cart = CartItem(
-
         customer_id=cart.customer_id,
-
         product_id=cart.product_id,
-
         quantity=cart.quantity,
-
         price=cart.price,
-
         total_price=total_price
     )
 
     db.add(new_cart)
-
     db.commit()
-
     db.refresh(new_cart)
 
     return new_cart
 
 
-
-# Get Customer Cart
 # Get Customer Cart
 def get_customer_cart(
     db: Session,
@@ -51,18 +67,16 @@ def get_customer_cart(
             Product.image_url
         )
         .outerjoin(
-    Product,
-    CartItem.product_id == Product.product_id
-)
+            Product,
+            CartItem.product_id == Product.product_id
+        )
         .filter(
             CartItem.customer_id == customer_id
         )
         .all()
     )
 
-
     result = []
-
 
     for cart, product_name, category, image_url in cart_items:
 
@@ -75,7 +89,8 @@ def get_customer_cart(
             "product_id": cart.product_id,
 
             "product_name": product_name or "Unknown Product",
-"category": category or "Unknown",
+
+            "category": category or "Unknown",
 
             "image_url": image_url,
 
@@ -88,7 +103,6 @@ def get_customer_cart(
             "created_at": cart.created_at
 
         })
-
 
     return result
 
@@ -111,20 +125,17 @@ def update_cart_quantity(
     if not cart_item:
         return None
 
-
     cart_item.quantity = quantity
 
     cart_item.total_price = (
         cart_item.price * quantity
     )
 
-
     db.commit()
 
     db.refresh(cart_item)
 
     return cart_item
-
 
 
 # Remove Cart Item
@@ -141,10 +152,8 @@ def remove_cart_item(
         .first()
     )
 
-
     if not cart_item:
         return None
-
 
     db.delete(cart_item)
 
